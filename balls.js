@@ -24,10 +24,10 @@ class Balls
         // Initialize with one particle that the user can move before dropping
     }
 
-    push_ball(mass, pos)
+    push_ball(mass, pos, vel)
     {
         this.Simulation.particles.push(new Particle());
-        this.Simulation.particles[this.Simulation.particles.length-1].set_particle(mass, pos, vec3(0,0,0), vec3(0,0,0), vec3(0,0,0));
+        this.Simulation.particles[this.Simulation.particles.length-1].set_particle(mass, pos, vel, vec3(0,0,0), vec3(0,0,0));
         return this.Simulation.particles[this.Simulation.particles.length-1];
     }
 };

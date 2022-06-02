@@ -237,6 +237,7 @@ export class Simulation
 
     this.integration_method = "";
     this.timestep = 0;
+    this.draw_particles = false;
   }
 
   update(dt)
@@ -268,13 +269,16 @@ export class Simulation
     const white = color(1, 1, 1, 1), red = color(1, 0, 0, 1);
     
     // draw particles
-    // for (const p of this.particles)
-    // {
-    //   const pos = p.pos;
-    //   let model_transform = Mat4.scale(0.2, 0.2, 0.2);
-    //   model_transform.pre_multiply(Mat4.translation(pos[0], pos[1], pos[2]));
-    //   shapes.ball.draw(webgl_manager, uniforms, model_transform, { ...materials.plastic, color: white});
-    // }
+    if (this.draw_particles)
+    {
+      for (const p of this.particles)
+      {
+        const pos = p.pos;
+        let model_transform = Mat4.scale(0.2, 0.2, 0.2);
+        model_transform.pre_multiply(Mat4.translation(pos[0], pos[1], pos[2]));
+        shapes.ball.draw(webgl_manager, uniforms, model_transform, { ...materials.plastic, color: red});
+      }
+    }
 
     //draw springs
     for (const s of this.springs)

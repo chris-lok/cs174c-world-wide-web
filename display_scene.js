@@ -1,3 +1,4 @@
+import { Balls } from './balls.js';
 import {tiny, defs} from './examples/common.js';
 import {Spiderweb} from './spiderweb.js';
 
@@ -35,6 +36,10 @@ const Display_Scene_Base = defs.Display_Scene_Base =
       
         // spiderweb instance
         this.web = new Spiderweb(vec3(0, 1, 0), 12, 13, 6); //center position, #rings, #sides, radius
+
+        // balls
+        this.balls = new Balls();
+        this.target = vec3(0, 5, 0);
       }
 
       render_animation( caller )
@@ -118,10 +123,16 @@ export class Display_Scene extends Display_Scene_Base
       // this.web.Simulation.particles[6].set_position(vec3(7, 9, 9));
 
       this.web.Simulation.update(this.web.Simulation.timestep);
+      this.balls.Simulation.update(this.balls.Simulation.timestep);
       t_sim += this.web.Simulation.timestep;
     }
 
     this.web.Simulation.draw(caller, this.uniforms, this.shapes, this.materials);
+    this.balls.Simulation.draw(caller, this.uniforms, this.shapes, this.materials);
+
+    // Draw target
+    let target_transform = Mat4.translation(this.target[0], this.target[1], this.target[2]).times(Mat4.scale(0.2,0.2,0.2));
+    this.shapes.ball.draw(caller, this.uniforms, target_transform, { ...this.materials.plastic, color: blue});
   }
 
   render_controls()
@@ -133,5 +144,30 @@ export class Display_Scene extends Display_Scene_Base
 
     //add controls here
     //text parsing to choose spiderweb size and position?
+    this.key_triggered_button( "Move Left", ["ArrowLeft"], this.move_left);
+    this.key_triggered_button( "Move Right", ["ArrowRight"], this.move_right);
+    this.key_triggered_button( "Move Down", ["k"], this.move_down);
+    this.key_triggered_button( "Move Up", ["i"], this.move_up);
+    this.key_triggered_button( "Move Forwards", ["ArrowUp"], this.move_for);
+    this.key_triggered_button( "Move Backwards", ["ArrowDown"], this.move_back);
+    this.key_triggered_button( "Drop Ball", ["/"], this.drop_ball);
+  }
+
+  move_ball(dir)
+  {
+    // console.log("Moving by " + dir.times(0.25));
+    this.target = this.target.plus(dir.times(0.25));
+  }
+  move_left()  { this.move_ball(vec3(-1, 0, 0)); }
+  move_right() { this.move_ball(vec3( 1, 0, 0)); }
+  move_down()  { this.move_ball(vec3( 0,-1, 0)); }
+  move_up()    { this.move_ball(vec3( 0, 1, 0)); }
+  move_back()  { this.move_ball(vec3( 0, 0, 1)); }
+  move_for()   { this.move_ball(vec3( 0, 0,-1)); }
+
+  drop_ball()
+  {
+    console.log("Dropping ball");
+    this.balls.push_ball(1, this.target);
   }
 }

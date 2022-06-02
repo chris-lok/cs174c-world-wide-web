@@ -1,6 +1,8 @@
-import { Balls } from './balls.js';
 import {tiny, defs} from './examples/common.js';
+import { Particle } from './part_two_spring.js';
 import {Spiderweb} from './spiderweb.js';
+import { Balls } from './balls.js';
+import { StickyModule } from './sticky-module.js';
 
 const { vec3, vec4, color, Mat4, Shape, Material, Shader, Texture, Component } = tiny;
 
@@ -40,6 +42,9 @@ const Display_Scene_Base = defs.Display_Scene_Base =
         // balls
         this.balls = new Balls();
         this.target = vec3(0, 5, 0);
+
+        // STICKY MODULE INITIALIZATION
+        this.sticky_module = new StickyModule(this.web.Simulation);
       }
 
       render_animation( caller )
@@ -123,7 +128,8 @@ export class Display_Scene extends Display_Scene_Base
       // this.web.Simulation.particles[6].set_position(vec3(7, 9, 9));
 
       this.web.Simulation.update(this.web.Simulation.timestep);
-      this.balls.Simulation.update(this.balls.Simulation.timestep);
+      // this.balls.Simulation.update(this.balls.Simulation.timestep);
+      this.sticky_module.modify_sim();
       t_sim += this.web.Simulation.timestep;
     }
 
@@ -167,7 +173,7 @@ export class Display_Scene extends Display_Scene_Base
 
   drop_ball()
   {
-    console.log("Dropping ball");
-    this.balls.push_ball(1, this.target);
+    // console.log("Dropping ball");
+    this.sticky_module.add_projectile(this.balls.push_ball(1, this.target));
   }
 }

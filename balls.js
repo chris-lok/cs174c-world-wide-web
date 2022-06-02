@@ -28,6 +28,7 @@ class Balls
     {
         this.Simulation.particles.push(new Particle());
         this.Simulation.particles[this.Simulation.particles.length-1].set_particle(mass, pos, vec3(0,0,0), vec3(0,0,0), vec3(0,0,0));
+        return this.Simulation.particles[this.Simulation.particles.length-1];
     }
 };
 

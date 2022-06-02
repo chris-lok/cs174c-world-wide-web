@@ -53,7 +53,7 @@ Object.assign (defs,
 let scenes = {1: Display_Scene, 2: Part_two_spring};
 const scene_selector = (i) => scenes[i];
 
-const main_scene        = Stickiness_Scene; // default
+const main_scene        = Display_Scene; // default
 const additional_scenes = [];
 
 export {main_scene, scene_selector, additional_scenes, defs};

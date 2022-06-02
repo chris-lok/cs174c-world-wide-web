@@ -1,14 +1,13 @@
 import {tiny, defs} from './examples/common.js';
-import { Particle } from './part_two_spring.js';
+import { Particle, Spring } from './part_two_spring.js';
 import {Spiderweb} from './spiderweb.js';
-import { Balls } from './balls.js';
 import { StickyModule } from './sticky-module.js';
 
 const { vec3, vec4, color, Mat4, Shape, Material, Shader, Texture, Component } = tiny;
 
 export
-const Display_Scene_Base = defs.Display_Scene_Base =
-    class Display_Scene_Base extends Component
+const Stickiness_Scene_Base = defs.Display_Scene_Base =
+    class Stickiness_Scene_Base extends Component
     {                                          // **My_Demo_Base** is a Scene that can be added to any display canvas.
                                                // This particular scene is broken up into two pieces for easier understanding.
                                                // The piece here is the base class, which sets up the machinery to draw a simple
@@ -37,16 +36,13 @@ const Display_Scene_Base = defs.Display_Scene_Base =
         this.ball_radius = 0.25;
       
         // spiderweb instance
-        this.web = new Spiderweb(vec3(0, 1, 0), 12, 13, 6); //center position, #rings, #sides, radius
-
-        // balls
-        this.balls = new Balls();
-        this.target_pos = vec3(0, 5, 0);
-        this.target_vel = vec3(0, 0, 0);
-        this.target_mass = 1;
+        this.web = new Spiderweb(vec3(0, 3, 0), 12, 13, 6); //center position, #rings, #sides, radius
 
         // STICKY MODULE INITIALIZATION
+        this.fall_particle = new Particle();
+        this.fall_particle.set_particle(2, vec3(0, 7, 0), vec3(0, 0, 0), vec3(0, 0, 0), vec3(0, 0, 0));
         this.sticky_module = new StickyModule(this.web.Simulation);
+        this.sticky_module.add_projectile(this.fall_particle);
       }
 
       render_animation( caller )
@@ -79,7 +75,7 @@ const Display_Scene_Base = defs.Display_Scene_Base =
     }
 
 
-export class Display_Scene extends Display_Scene_Base
+export class Stickiness_Scene extends Stickiness_Scene_Base
 {                                                    
   render_animation( caller )
   {                                          
@@ -130,97 +126,24 @@ export class Display_Scene extends Display_Scene_Base
       // this.web.Simulation.particles[6].set_position(vec3(7, 9, 9));
 
       this.web.Simulation.update(this.web.Simulation.timestep);
-      // this.balls.Simulation.update(this.balls.Simulation.timestep);
       this.sticky_module.modify_sim();
       t_sim += this.web.Simulation.timestep;
     }
 
     this.web.Simulation.draw(caller, this.uniforms, this.shapes, this.materials);
-    this.balls.Simulation.draw(caller, this.uniforms, this.shapes, this.materials);
 
-    // Draw target
-    let target_transform = Mat4.translation(this.target_pos[0], this.target_pos[1], this.target_pos[2]).times(Mat4.scale(0.2,0.2,0.2));
-    this.shapes.ball.draw(caller, this.uniforms, target_transform, { ...this.materials.plastic, color: blue});
-
-    this.render_controls();
-
-    // if (this.balls.Simulation.particles.length > 0)
-    // {
-    //   console.log("Velocity: " + this.balls.Simulation.particles[0].vel);
-    // }
+    // Draw projectile that will fall into web
+    this.shapes.ball.draw(caller, this.uniforms, Mat4.translation(this.fall_particle.pos[0], this.fall_particle.pos[1], this.fall_particle.pos[2]), { ...this.materials.plastic, color: blue });
   }
 
   render_controls()
   {                                 
     // render_controls(): Sets up a panel of interactive HTML elements, including
     // buttons with key bindings for affecting this scene, and live info readouts.
-    this.control_panel.innerHTML = "Ball controls:";
+    this.control_panel.innerHTML += "Display: (no buttons)";
     this.new_line();
 
     //add controls here
     //text parsing to choose spiderweb size and position?
-    this.control_panel.innerHTML += "- Ball position: " + this.target_pos;
-    this.new_line();
-    this.key_triggered_button( "Move Left", ["ArrowLeft"], this.move_left, "#326ba8");
-    this.key_triggered_button( "Move Right", ["ArrowRight"], this.move_right, "#326ba8");
-    this.key_triggered_button( "Move Down", ["k"], this.move_down, "#326ba8");
-    this.key_triggered_button( "Move Up", ["i"], this.move_up, "#326ba8");
-    this.key_triggered_button( "Move Backwards", ["ArrowDown"], this.move_back, "#326ba8");
-    this.key_triggered_button( "Move Forwards", ["ArrowUp"], this.move_for, "#326ba8");
-    this.new_line();
-    this.control_panel.innerHTML += "- Ball velocity: " + this.target_vel;
-    this.new_line();
-    this.key_triggered_button( "Vel. Left", ["g"], this.vel_left, "#eddf15");
-    this.key_triggered_button( "Vel. Right", ["j"], this.vel_right, "#eddf15");
-    this.key_triggered_button( "Vel. Down", ["u"], this.vel_down, "#eddf15");
-    this.key_triggered_button( "Vel. Up", ["t"], this.vel_up, "#eddf15");
-    this.key_triggered_button( "Vel. Backwards", ["h"], this.vel_back, "#eddf15");
-    this.key_triggered_button( "Vel. Forwards", ["y"], this.vel_for, "#eddf15");
-    this.new_line();
-    this.control_panel.innerHTML += "- Ball mass: " + this.target_mass;
-    this.new_line();
-    this.key_triggered_button( "Remove Mass", ["-"], this.remove_mass, "#1fed26");
-    this.key_triggered_button( "Add Mass", ["="], this.add_mass, "#1fed26");
-    this.new_line();
-    this.key_triggered_button( "Drop Ball", ["/"], this.drop_ball, "#d11730");
-  }
-
-  move_ball(dir)
-  {
-    // console.log("Moving by " + dir.times(0.25));
-    this.target_pos = this.target_pos.plus(dir.times(0.25));
-  }
-  move_left()  { this.move_ball(vec3(-1, 0, 0)); }
-  move_right() { this.move_ball(vec3( 1, 0, 0)); }
-  move_down()  { this.move_ball(vec3( 0,-1, 0)); }
-  move_up()    { this.move_ball(vec3( 0, 1, 0)); }
-  move_back()  { this.move_ball(vec3( 0, 0, 1)); }
-  move_for()   { this.move_ball(vec3( 0, 0,-1)); }
-
-  add_velocity(dir)
-  {
-    // console.log("Velocity changed by " + dir.times(0.25));
-    this.target_vel = this.target_vel.plus(dir.times(0.25));
-  }
-  vel_left()  { this.add_velocity(vec3(-1, 0, 0)); }
-  vel_right() { this.add_velocity(vec3( 1, 0, 0)); }
-  vel_down()  { this.add_velocity(vec3( 0,-1, 0)); }
-  vel_up()    { this.add_velocity(vec3( 0, 1, 0)); }
-  vel_back()  { this.add_velocity(vec3( 0, 0, 1)); }
-  vel_for()   { this.add_velocity(vec3( 0, 0,-1)); }
-
-  remove_mass()
-  {
-    this.target_mass -= 0.25
-  }
-  add_mass()
-  {
-    this.target_mass += 0.25
-  }
-
-  drop_ball()
-  {
-    // console.log("Dropping ball");
-    this.sticky_module.add_projectile(this.balls.push_ball(this.target_mass, this.target_pos, this.target_vel));
   }
 }

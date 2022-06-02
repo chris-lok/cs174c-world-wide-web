@@ -28,7 +28,7 @@ export class StickyModule
                     if(proj.pos.minus(p.pos).norm() < stickDist)
                     {
                         const stickySpring = new Spring();
-                        stickySpring.set_spring(p, proj, 1, 1, 1);
+                        stickySpring.set_spring(p, proj, 1000, 1, stickDist);
                         this.simulation.springs.push(stickySpring);
                         this.particles_stuck_to.push(p);
                     }

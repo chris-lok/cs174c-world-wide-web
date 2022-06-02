@@ -36,7 +36,7 @@ const Stickiness_Scene_Base = defs.Display_Scene_Base =
         this.ball_radius = 0.25;
       
         // spiderweb instance
-        this.web = new Spiderweb(vec3(0, 1, 0), 12, 13, 6); //center position, #rings, #sides, radius
+        this.web = new Spiderweb(vec3(0, 3, 0), 12, 13, 6); //center position, #rings, #sides, radius
 
         // STICKY MODULE INITIALIZATION
         this.fall_particle = new Particle();

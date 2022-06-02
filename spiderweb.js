@@ -8,7 +8,7 @@ const { vec3, vec4, color, Mat4, Shape, Material, Shader, Texture, Component } =
 export
 class Spiderweb
 {
-    constructor(center = vec3(0, 0, 0), numberOfRings = 12, numberOfSides = 13, radiusLength = 6)
+    constructor(center = vec3(0, 0, 0), numberOfRings = 12, numberOfSides = 13, radiusLength = 6, spring_ks = 5000, spring_kd = 100, springRestLengthModifier = 0.9)
     {
         this.center = center;
         this.numberOfRings = numberOfRings;
@@ -17,9 +17,9 @@ class Spiderweb
         this.webParticleMass = 1;
         this.exteriorParticles = [];
 
-        this.spring_ks = 5000;
-        this.spring_kd = 100;
-        this.springRestLengthModifier = 0.9;
+        this.spring_ks = spring_ks;
+        this.spring_kd = spring_kd;
+        this.springRestLengthModifier = springRestLengthModifier;
 
         this.Simulation = new Simulation();
         this.Simulation.g_acc = vec3(0, -9.8, 0);

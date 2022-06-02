@@ -36,16 +36,15 @@ const Display_Scene_Base = defs.Display_Scene_Base =
         this.ball_location = vec3(1, 1, 1);
         this.ball_radius = 0.25;
       
-        // spiderweb instantiation, mess with following parameters for maybe better results:
-        this.web = new Spiderweb(vec3(0, 4, 0), 12, 13, 6);   //center position, #rings, #sides, radius length
+        // spiderweb instantiation, mess with following web & simulation parameters for maybe better results:
+         //center position, #rings, #sides, radius length, spring ks, spring kd, spring rest length modifier
+        this.web = new Spiderweb(vec3(0, 4, 0), 12, 13, 6, 5000, 100, 0.9);  
         this.web.Simulation.integration_method = "verlet";
         this.web.Simulation.g_acc = vec3(0, -9.8, 0);
         this.web.Simulation.ground_ks = 500;
         this.web.Simulation.ground_kd = .1;
         this.web.Simulation.timestep = 0.001;
-        this.web.spring_ks = 5000;
-        this.web.spring_kd = 100;
-        this.web.springRestLengthModifier = 0.9;
+
 
         this.web_exterior_positions = [];
         this.web.exteriorParticles.forEach((x, i) => this.web_exterior_positions.push(x.pos)); 

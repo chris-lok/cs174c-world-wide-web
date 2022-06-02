@@ -30,6 +30,7 @@ import {Transforms_Sandbox_Base, Transforms_Sandbox}
 
 import {Part_two_spring} from "./part_two_spring.js";
 import {Display_Scene} from "./display_scene.js";
+import {Stickiness_Scene} from "./stickiness_scene.js";
 
 Object.assign (defs,
     {Minimal_Webgl_Demo},
@@ -43,7 +44,8 @@ Object.assign (defs,
     {Text_Demo},
     {Transforms_Sandbox_Base, Transforms_Sandbox},
     {Part_two_spring},
-    {Display_Scene}
+    {Display_Scene},
+    {Stickiness_Scene}
 );
 
 // ******************** SELECT THE DEMO TO DISPLAY:
@@ -51,7 +53,7 @@ Object.assign (defs,
 let scenes = {1: Display_Scene, 2: Part_two_spring};
 const scene_selector = (i) => scenes[i];
 
-const main_scene        = Display_Scene; // default
+const main_scene        = Stickiness_Scene; // default
 const additional_scenes = [];
 
 export {main_scene, scene_selector, additional_scenes, defs};

@@ -27,7 +27,7 @@ export class StickyModule
                     const stickDist = 0.2;
                     if(proj.pos.minus(p.pos).norm() < stickDist)
                     {
-                        const stickySpring = new Spring();
+                        const stickySpring = new StickySpring();
                         stickySpring.set_spring(p, proj, 10000, 1, stickDist);
                         this.simulation.springs.push(stickySpring);
                         this.particles_stuck_to.push(p);
@@ -36,5 +36,15 @@ export class StickyModule
             })
             
         })
+    }
+}
+
+// Give a special identifier to those springs that are used to give the sticky illusion
+class StickySpring extends Spring
+{
+    constructor()
+    {
+        super();
+        this.isSticky = 1;
     }
 }

@@ -28,20 +28,23 @@ export class BreakModule
                     const p2 = new Particle();
 
                     const halfway = s.particle_i.pos.plus(s.particle_j.pos).times(0.5);
-                    p1.set_particle(1, halfway, vec3(0, 0, 0), vec3(0, 0, 0), vec3(0, 0, 0));
-                    p2.set_particle(1, halfway, vec3(0, 0, 0), vec3(0, 0, 0), vec3(0, 0, 0));
-                    s1.set_spring(s.particle_i, p1, 1000, 1, natLen/2);
-                    s2.set_spring(s.particle_j, p2, 1000, 1, natLen/2);
+                    // p1.set_particle(1, halfway.plus(vec3(0, 0.5, 0)), vec3(0, 0, 0), vec3(0, 0, 0), vec3(0, 0, 0));
+                    // p2.set_particle(1, halfway.plus(vec3(0, -0.5, 0)), vec3(0, 0, 0), vec3(0, 0, 0), vec3(0, 0, 0));
+                    // s1.set_spring(s.particle_i, p1, 1000, 1, natLen/2);
+                    // s2.set_spring(s.particle_j, p2, 1000, 1, natLen/2);
 
-                    this.simulator.particles.push(p1, p2);
-                    this.simulator.springs.push(s1, s2);
-                    this.strands.push(s1, s2);
+                    // this.simulator.particles.push(p1, p2);
+                    // this.simulator.springs.push(s1, s2);
+                    // this.strands.push(s1, s2);
+
 
                     for(let i = 0; i < this.simulator.springs.length; i++)
                     {
-                        if(this.simulator.springs[i] === s)
+                        if(this.simulator.springs[i] === s && s.isSticky === undefined)
                         {
+                            //console.log("SPRING " + i + " BROKEN");
                             this.simulator.springs.splice(i, 1);
+                            i--;
                         }
                     }
                 }

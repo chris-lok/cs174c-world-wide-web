@@ -3,6 +3,7 @@ import { Particle } from './part_two_spring.js';
 import {Spiderweb} from './spiderweb.js';
 import { Balls } from './balls.js';
 import { StickyModule } from './sticky-module.js';
+import { BreakModule } from './break-module.js';
 
 const { vec3, vec4, color, Mat4, Shape, Material, Shader, Texture, Component } = tiny;
 
@@ -53,10 +54,11 @@ const Display_Scene_Base = defs.Display_Scene_Base =
         this.balls = new Balls();
         this.target_pos = vec3(0, 5, 0);
         this.target_vel = vec3(0, 0, 0);
-        this.target_mass = 1;
+        this.target_mass = 10;
 
         // STICKY MODULE INITIALIZATION
         this.sticky_module = new StickyModule(this.web.Simulation);
+        this.break_module = new BreakModule(this.web.Simulation);
       }
 
       render_animation( caller )
@@ -182,6 +184,7 @@ export class Display_Scene extends Display_Scene_Base
       this.web.Simulation.update(this.web.Simulation.timestep);
       // this.balls.Simulation.update(this.balls.Simulation.timestep);
       this.sticky_module.modify_sim();
+      this.break_module.modify_sim();
       t_sim += this.web.Simulation.timestep;
     }
 

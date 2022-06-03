@@ -31,7 +31,7 @@ const Display_Scene_Base = defs.Display_Scene_Base =
         this.materials.plastic = { shader: phong, ambient: .2, diffusivity: 1, specularity: .5, color: color( .9,.5,.9,1 ) }
         this.materials.metal   = { shader: phong, ambient: .2, diffusivity: 1, specularity:  1, color: color( .9,.5,.9,1 ) }
         this.materials.rgb = { shader: tex_phong, ambient: .5, texture: new Texture( "assets/rgb.jpg" ) }
-        this.materials.pure = {shader: phong, ambient: 1, diffusivity: 1, specularity: 0, color: color( .9,.5,.9,1 ) }
+        this.materials.pure = {shader: phong, ambient: 1, diffusivity: 1, specularity: 0, color: color( 83/256, 171/256, 230/256, 1 ) }
 
         this.ball_location = vec3(1, 1, 1);
         this.ball_radius = 0.25;
@@ -116,45 +116,49 @@ export class Display_Scene extends Display_Scene_Base
     const dt = this.dt = this.uniforms.animation_delta_time/1000;
     
     // !!! Draw ground
-    let floor_transform = Mat4.translation(0, 0, 0).times(Mat4.scale(10, 1, 10));
-    this.shapes.box.draw( caller, this.uniforms, floor_transform, { ...this.materials.plastic, color: yellow } );
+    {
+      let floor_transform = Mat4.translation(0, 0, 0).times(Mat4.scale(10, 1, 10));
+      this.shapes.box.draw( caller, this.uniforms, floor_transform, { ...this.materials.plastic, color: yellow } );
 
-    let tree1_transform = Mat4.translation(6.4, 5, 0).times(Mat4.scale(0.6, 5, 0.6));
-    this.shapes.box.draw( caller, this.uniforms, tree1_transform, { ...this.materials.plastic, color: brown2 } );
+      let tree1_transform = Mat4.translation(6.4, 5, 0).times(Mat4.scale(0.6, 5, 0.6));
+      this.shapes.box.draw( caller, this.uniforms, tree1_transform, { ...this.materials.plastic, color: brown2 } );
 
-    let tree2_transform = Mat4.translation(-6.4, 8, 0).times(Mat4.scale(1.1, 9, 1.1));
-    this.shapes.box.draw( caller, this.uniforms, tree2_transform, { ...this.materials.plastic, color: brown2 } );
+      let tree2_transform = Mat4.translation(-6.4, 8, 0).times(Mat4.scale(1.1, 9, 1.1));
+      this.shapes.box.draw( caller, this.uniforms, tree2_transform, { ...this.materials.plastic, color: brown2 } );
 
-    let tree3_transform = Mat4.translation(-2, 3, 6).times(Mat4.scale(0.4, 3, 0.4));
-    this.shapes.box.draw( caller, this.uniforms, tree3_transform, { ...this.materials.plastic, color: brown2 } );
+      let tree3_transform = Mat4.translation(-2, 3, 6).times(Mat4.scale(0.4, 3, 0.4));
+      this.shapes.box.draw( caller, this.uniforms, tree3_transform, { ...this.materials.plastic, color: brown2 } );
 
-    let tree4_transform = Mat4.translation(-2, 2.5, -6).times(Mat4.scale(0.3, 2.5, 0.3));
-    this.shapes.box.draw( caller, this.uniforms, tree4_transform, { ...this.materials.plastic, color: brown1 } );
+      let tree4_transform = Mat4.translation(-2, 2.5, -6).times(Mat4.scale(0.3, 2.5, 0.3));
+      this.shapes.box.draw( caller, this.uniforms, tree4_transform, { ...this.materials.plastic, color: brown1 } );
 
-    let tree5_transform = Mat4.translation(-3, 2, -5).times(Mat4.scale(0.2, 2, 0.2));
-    this.shapes.box.draw( caller, this.uniforms, tree5_transform, { ...this.materials.plastic, color: brown1 } );
+      let tree5_transform = Mat4.translation(-3, 2, -5).times(Mat4.scale(0.2, 2, 0.2));
+      this.shapes.box.draw( caller, this.uniforms, tree5_transform, { ...this.materials.plastic, color: brown1 } );
 
-    let tree6_transform = Mat4.translation(-2.2, 1.5, -5.6).times(Mat4.scale(0.15, 1.5, 0.15));
-    this.shapes.box.draw( caller, this.uniforms, tree6_transform, { ...this.materials.plastic, color: brown1 } );
+      let tree6_transform = Mat4.translation(-2.2, 1.5, -5.6).times(Mat4.scale(0.15, 1.5, 0.15));
+      this.shapes.box.draw( caller, this.uniforms, tree6_transform, { ...this.materials.plastic, color: brown1 } );
 
-    let ball_transform = Mat4.translation(6.4, 8.1, 0).times(Mat4.scale(3, 2, 3));
-    this.shapes.ball.draw( caller, this.uniforms, ball_transform, { ...this.materials.plastic, color: yellow } );
+      let ball_transform = Mat4.translation(6.4, 8.1, 0).times(Mat4.scale(3, 2, 3));
+      this.shapes.ball.draw( caller, this.uniforms, ball_transform, { ...this.materials.plastic, color: yellow } );
 
-    let ball0_transform = Mat4.translation(6.4, 10.1, 0).times(Mat4.scale(2, 1.5, 2));
-    this.shapes.ball.draw( caller, this.uniforms, ball0_transform, { ...this.materials.plastic, color: yellow } );
+      let ball0_transform = Mat4.translation(6.4, 10.1, 0).times(Mat4.scale(2, 1.5, 2));
+      this.shapes.ball.draw( caller, this.uniforms, ball0_transform, { ...this.materials.plastic, color: yellow } );
 
-    let ball00_transform = Mat4.translation(6.4, 11.5, 0).times(Mat4.scale(1, 1, 1));
-    this.shapes.ball.draw( caller, this.uniforms, ball00_transform, { ...this.materials.plastic, color: yellow } );
+      let ball00_transform = Mat4.translation(6.4, 11.5, 0).times(Mat4.scale(1, 1, 1));
+      this.shapes.ball.draw( caller, this.uniforms, ball00_transform, { ...this.materials.plastic, color: yellow } );
 
-    let ball2_transform = Mat4.translation(-2, 5.1, 6).times(Mat4.scale(2, 1.5, 2));
-    this.shapes.ball.draw( caller, this.uniforms, ball2_transform, { ...this.materials.plastic, color: yellow } );
+      let ball2_transform = Mat4.translation(-2, 5.1, 6).times(Mat4.scale(2, 1.5, 2));
+      this.shapes.ball.draw( caller, this.uniforms, ball2_transform, { ...this.materials.plastic, color: yellow } );
 
-    let ball3_transform = Mat4.translation(-6.4, 15, 0).times(Mat4.scale(7, 3, 7));
-    this.shapes.ball.draw( caller, this.uniforms, ball3_transform, { ...this.materials.plastic, color: yellow } );
+      let ball3_transform = Mat4.translation(-6.4, 15, 0).times(Mat4.scale(7, 3, 7));
+      this.shapes.ball.draw( caller, this.uniforms, ball3_transform, { ...this.materials.plastic, color: yellow } );
 
-    let ball4_transform = Mat4.translation(-2.5, 4.5, -5.5).times(Mat4.scale(1.8, 1.3, 1.8));
-    this.shapes.ball.draw( caller, this.uniforms, ball4_transform, { ...this.materials.plastic, color: yellow } );
-
+      let ball4_transform = Mat4.translation(-2.5, 4.5, -5.5).times(Mat4.scale(1.8, 1.3, 1.8));
+      this.shapes.ball.draw( caller, this.uniforms, ball4_transform, { ...this.materials.plastic, color: yellow } );
+    }
+    // !!! Draw skysphere thing
+    let sky_transform = Mat4.scale(50,50,50);
+    this.shapes.ball.draw( caller, this.uniforms, sky_transform, { ...this.materials.pure } );
 
     // !!! Draw ball (for reference)
     // let ball_transform = Mat4.translation(this.ball_location[0], this.ball_location[1], this.ball_location[2])

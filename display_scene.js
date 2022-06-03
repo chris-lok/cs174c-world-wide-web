@@ -110,14 +110,32 @@ export class Display_Scene extends Display_Scene_Base
      Start coding down here!!!!
      **********************************/
 
-    const blue = color( 0,0,1,1 ), yellow = color( 0.7,1,0,1 );
+    const blue = color( 0,0,1,1 ), yellow = color( 0.7,1,0,1 ), brown1 = color(0.5, 0.25, 0.05, 0.7), brown2 = color(0.5, 0.25, 0.05, 1);
 
     const t = this.t = this.uniforms.animation_time/1000;
     const dt = this.dt = this.uniforms.animation_delta_time/1000;
     
     // !!! Draw ground
-    let floor_transform = Mat4.translation(0, 0, 0).times(Mat4.scale(10, 0.01, 10));
+    let floor_transform = Mat4.translation(0, 0, 0).times(Mat4.scale(10, 1, 10));
     this.shapes.box.draw( caller, this.uniforms, floor_transform, { ...this.materials.plastic, color: yellow } );
+
+    let tree1_transform = Mat4.translation(6.4, 5, 0).times(Mat4.scale(0.6, 5, 0.6));
+    this.shapes.box.draw( caller, this.uniforms, tree1_transform, { ...this.materials.plastic, color: brown2 } );
+
+    let tree2_transform = Mat4.translation(-6.4, 8, 0).times(Mat4.scale(1.1, 9, 1.1));
+    this.shapes.box.draw( caller, this.uniforms, tree2_transform, { ...this.materials.plastic, color: brown2 } );
+
+    let tree3_transform = Mat4.translation(-2, 3, 6).times(Mat4.scale(0.4, 3, 0.4));
+    this.shapes.box.draw( caller, this.uniforms, tree3_transform, { ...this.materials.plastic, color: brown2 } );
+
+    let tree4_transform = Mat4.translation(-2, 2.5, -6).times(Mat4.scale(0.3, 2.5, 0.3));
+    this.shapes.box.draw( caller, this.uniforms, tree4_transform, { ...this.materials.plastic, color: brown1 } );
+
+    let tree5_transform = Mat4.translation(-3, 2, -5).times(Mat4.scale(0.2, 2, 0.2));
+    this.shapes.box.draw( caller, this.uniforms, tree5_transform, { ...this.materials.plastic, color: brown1 } );
+
+    let tree6_transform = Mat4.translation(-2.2, 1.5, -5.6).times(Mat4.scale(0.15, 1.5, 0.15));
+    this.shapes.box.draw( caller, this.uniforms, tree6_transform, { ...this.materials.plastic, color: brown1 } );
 
     // !!! Draw ball (for reference)
     // let ball_transform = Mat4.translation(this.ball_location[0], this.ball_location[1], this.ball_location[2])

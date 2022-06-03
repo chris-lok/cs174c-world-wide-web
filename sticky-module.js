@@ -22,13 +22,13 @@ export class StickyModule
             this.projectiles.forEach((proj) => 
             {
                 // If it's not the ball itself nor a particle the ball is already stuck to
-                if(proj !== p && !this.particles_stuck_to.includes(p))
+                if(proj !== p && !this.particles_stuck_to.includes(p) && !this.projectiles.includes(p))
                 {
-                    const stickDist = 0.5;
+                    const stickDist = 0.2;
                     if(proj.pos.minus(p.pos).norm() < stickDist)
                     {
                         const stickySpring = new Spring();
-                        stickySpring.set_spring(p, proj, 1000, 1, stickDist);
+                        stickySpring.set_spring(p, proj, 10000, 1, stickDist);
                         this.simulation.springs.push(stickySpring);
                         this.particles_stuck_to.push(p);
                     }

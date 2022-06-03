@@ -117,7 +117,7 @@ class Spiderweb
 
         //connect rings
         let current_ring = 1;
-        while (current_ring <= this.numberOfRings)
+        while (current_ring < this.numberOfRings)
         {
             let current_side = 0;
             let A = current_ring; 

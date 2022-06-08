@@ -119,7 +119,7 @@ export class Display_Scene extends Display_Scene_Base
     
     // !!! Draw ground
     {
-      let floor_transform = Mat4.translation(0, 0, 0).times(Mat4.scale(10, 1, 10));
+      let floor_transform = Mat4.translation(0, -1, 0).times(Mat4.scale(10, 1, 10));
       this.shapes.box.draw( caller, this.uniforms, floor_transform, { ...this.materials.plastic, color: yellow } );
 
       let tree1_transform = Mat4.translation(6.4, 5, 0).times(Mat4.scale(0.6, 5, 0.6));
@@ -257,6 +257,7 @@ export class Display_Scene extends Display_Scene_Base
     this.new_line();
     this.key_triggered_button( "Drop Ball", ["/"], this.drop_ball, "#d11730");
     this.new_line();
+    this.new_line();
     this.control_panel.innerHTML += "Web controls:";
     this.new_line();
     this.control_panel.innerHTML += "- Web rings: " + (this.web.numberOfRings-1) + '\t';
@@ -266,6 +267,10 @@ export class Display_Scene extends Display_Scene_Base
     this.control_panel.innerHTML += "- Web sides: " + (this.web.numberOfSides) + '\t';
     this.key_triggered_button( "Remove Side", ["x"], this.remove_side, "#910688");
     this.key_triggered_button( "Add Side", ["c"], this.add_side, "#910688");
+    this.new_line();
+    this.control_panel.innerHTML += "- Web radius: " + (this.web.radiusLength) + '\t';
+    this.key_triggered_button( "Remove Radius", ["n"], this.remove_radius, "#d14900");
+    this.key_triggered_button( "Add Radius", ["m"], this.add_radius, "#d14900");
   }
 
   move_ball(dir)
@@ -332,6 +337,20 @@ export class Display_Scene extends Display_Scene_Base
   add_side()
   {
     this.web.numberOfSides++;
+    this.regenerate_web();
+  }
+
+  remove_radius()
+  {
+    if (this.web.radiusLength > 0.5)
+    {
+      this.web.radiusLength -= 0.25;
+      this.regenerate_web();
+    }
+  }
+  add_radius()
+  {
+    this.web.radiusLength += 0.25;
     this.regenerate_web();
   }
 }

@@ -72,7 +72,7 @@ const Display_Scene_Base = defs.Display_Scene_Base =
           caller.controls.add_mouse_controls( caller.canvas );
 
           // !!! Camera changed here
-          Shader.assign_camera( Mat4.look_at (vec3 (10, 10, 10), vec3 (0, 0, 0), vec3 (0, 1, 0)), this.uniforms );
+          Shader.assign_camera( Mat4.look_at (vec3 (5, 10, 10), vec3 (0, 2, 0), vec3 (0, 1, 0)), this.uniforms );
         }
         this.uniforms.projection_transform = Mat4.perspective( Math.PI/4, caller.width/caller.height, 1, 100 );
 
@@ -203,6 +203,29 @@ export class Display_Scene extends Display_Scene_Base
     // }
   }
 
+  regenerate_web()
+  {
+    this.web = new Spiderweb(
+      this.web.center, this.web.numberOfRings, this.web.numberOfSides, this.web.radiusLength, 
+      this.web.spring_ks, this.web.spring_kd, this.web.springRestLengthModifier
+    );
+    this.web.Simulation.integration_method = "verlet";
+    this.web.Simulation.g_acc = vec3(0, -9.8, 0);
+    this.web.Simulation.ground_ks = 500;
+    this.web.Simulation.ground_kd = .1;
+    this.web.Simulation.timestep = 0.001;
+    
+    this.web_exterior_positions = [];
+    this.web.exteriorParticles.forEach((x, i) => this.web_exterior_positions.push(x.pos)); 
+
+    // STICKY MODULE INITIALIZATION
+    this.sticky_module = new StickyModule(this.web.Simulation);
+    this.break_module = new BreakModule(this.web.Simulation);
+
+    // balls
+    this.balls = new Balls();
+  }
+
   render_controls()
   {                                 
     // render_controls(): Sets up a panel of interactive HTML elements, including
@@ -212,8 +235,7 @@ export class Display_Scene extends Display_Scene_Base
 
     //add controls here
     //text parsing to choose spiderweb size and position?
-    this.control_panel.innerHTML += "- Ball position: " + this.target_pos;
-    this.new_line();
+    this.control_panel.innerHTML += "- Ball position: " + this.target_pos + '\t';
     this.key_triggered_button( "Move Left", ["ArrowLeft"], this.move_left, "#326ba8");
     this.key_triggered_button( "Move Right", ["ArrowRight"], this.move_right, "#326ba8");
     this.key_triggered_button( "Move Down", ["k"], this.move_down, "#326ba8");
@@ -221,21 +243,29 @@ export class Display_Scene extends Display_Scene_Base
     this.key_triggered_button( "Move Backwards", ["ArrowDown"], this.move_back, "#326ba8");
     this.key_triggered_button( "Move Forwards", ["ArrowUp"], this.move_for, "#326ba8");
     this.new_line();
-    this.control_panel.innerHTML += "- Ball velocity: " + this.target_vel;
+    this.control_panel.innerHTML += "- Ball velocity: " + this.target_vel + '\t';
+    this.key_triggered_button( "Vel. Left", ["g"], this.vel_left, "#c9960a");
+    this.key_triggered_button( "Vel. Right", ["j"], this.vel_right, "#c9960a");
+    this.key_triggered_button( "Vel. Down", ["u"], this.vel_down, "#c9960a");
+    this.key_triggered_button( "Vel. Up", ["t"], this.vel_up, "#c9960a");
+    this.key_triggered_button( "Vel. Backwards", ["h"], this.vel_back, "#c9960a");
+    this.key_triggered_button( "Vel. Forwards", ["y"], this.vel_for, "#c9960a");
     this.new_line();
-    this.key_triggered_button( "Vel. Left", ["g"], this.vel_left, "#eddf15");
-    this.key_triggered_button( "Vel. Right", ["j"], this.vel_right, "#eddf15");
-    this.key_triggered_button( "Vel. Down", ["u"], this.vel_down, "#eddf15");
-    this.key_triggered_button( "Vel. Up", ["t"], this.vel_up, "#eddf15");
-    this.key_triggered_button( "Vel. Backwards", ["h"], this.vel_back, "#eddf15");
-    this.key_triggered_button( "Vel. Forwards", ["y"], this.vel_for, "#eddf15");
-    this.new_line();
-    this.control_panel.innerHTML += "- Ball mass: " + this.target_mass;
-    this.new_line();
-    this.key_triggered_button( "Remove Mass", ["-"], this.remove_mass, "#1fed26");
-    this.key_triggered_button( "Add Mass", ["="], this.add_mass, "#1fed26");
+    this.control_panel.innerHTML += "- Ball mass: " + this.target_mass + '\t';
+    this.key_triggered_button( "Remove Mass", ["-"], this.remove_mass, "#066e02");
+    this.key_triggered_button( "Add Mass", ["="], this.add_mass, "#066e02");
     this.new_line();
     this.key_triggered_button( "Drop Ball", ["/"], this.drop_ball, "#d11730");
+    this.new_line();
+    this.control_panel.innerHTML += "Web controls:";
+    this.new_line();
+    this.control_panel.innerHTML += "- Web rings: " + (this.web.numberOfRings-1) + '\t';
+    this.key_triggered_button( "Remove Ring", ["q"], this.remove_ring, "#000000");
+    this.key_triggered_button( "Add Ring", ["e"], this.add_ring, "#000000");
+    this.new_line();
+    this.control_panel.innerHTML += "- Web sides: " + (this.web.numberOfSides) + '\t';
+    this.key_triggered_button( "Remove Side", ["x"], this.remove_side, "#910688");
+    this.key_triggered_button( "Add Side", ["c"], this.add_side, "#910688");
   }
 
   move_ball(dir)
@@ -275,5 +305,33 @@ export class Display_Scene extends Display_Scene_Base
   {
     // console.log("Dropping ball");
     this.sticky_module.add_projectile(this.balls.push_ball(this.target_mass, this.target_pos, this.target_vel));
+  }
+
+  remove_ring()
+  {
+    if (this.web.numberOfRings > 1)
+    {
+      this.web.numberOfRings--;
+      this.regenerate_web();
+    }
+  }
+  add_ring()
+  {
+    this.web.numberOfRings++;
+    this.regenerate_web();
+  }
+
+  remove_side()
+  {
+    if (this.web.numberOfSides > 5)
+    {
+      this.web.numberOfSides--;
+      this.regenerate_web();
+    }
+  }
+  add_side()
+  {
+    this.web.numberOfSides++;
+    this.regenerate_web();
   }
 }

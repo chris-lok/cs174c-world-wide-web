@@ -50,7 +50,7 @@ Object.assign (defs,
 
 // ******************** SELECT THE DEMO TO DISPLAY:
 
-let scenes = {1: Display_Scene, 2: Part_two_spring};
+let scenes = {1: Display_Scene};
 const scene_selector = (i) => scenes[i];
 
 const main_scene        = Display_Scene; // default

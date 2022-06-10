@@ -29,6 +29,32 @@ class Bug {
         this.neck = new Arc("neck", this.torso_node, this.head_node, neck_location);
         this.torso_node.children_arcs.push(this.neck);
 
+        for(let k = 0; k < 2; k++)
+        {
+            const mult = (k == 0)? 1 : -1;  // Determines which side the legs go on
+            for(let i = 0; i < 4; i++)
+            {
+                let uleg_transform = Mat4.scale(.1, .02, .02);
+                uleg_transform.pre_multiply(Mat4.translation(0.1, 0, 0));
+                const uleg_node = new Node("uleg" + i + "-" + k, sphere_shape, uleg_transform);
+                const ujoint_location = Mat4.translation(0.1, 0, i*-0.1 + 0.1);
+                const ujoint = new Arc("ujoint" + i + "-" + k, this.torso_node, uleg_node, ujoint_location);
+                ujoint.articulation_matrix = Mat4.rotation(Math.PI * k, 0, 1, 0);
+                ujoint.articulation_matrix.pre_multiply(Mat4.rotation(Math.PI/4, 0, 0, 1));
+                this.torso_node.children_arcs.push(ujoint);
+
+                let lleg_transform = Mat4.scale(.2, .02, .02);
+                lleg_transform.pre_multiply(Mat4.translation(.15, 0 , 0));
+                const lleg_node = new Node("lleg" + i + "-" + k, sphere_shape, lleg_transform);
+                const ljoint_location = Mat4.translation(.2, 0, 0);
+                const ljoint = new Arc("ljoint" + i + "-" + k, uleg_node, lleg_node, ljoint_location);
+                ljoint.articulation_matrix = Mat4.rotation(-Math.PI/4, 0, 0, 1);
+                uleg_node.children_arcs.push(ljoint);
+            }
+        }
+        
+        
+
     }
 
     set_pos(x, y, z)
@@ -41,13 +67,13 @@ class Bug {
         
     }
 
-    look_at(at)
+    look_at(at, up)
     {
         const pos = vec3(this.root.location_matrix[0][3], this.root.location_matrix[1][3], this.root.location_matrix[2][3]);
         try {
             
             let z = at.minus (pos).normalized (),
-              x = z.cross (vec3(0, 1, 0)).normalized (),
+              x = z.cross (up).normalized (),
               y = x.cross (z).normalized ();
             const rot = Mat4.of (x.to4 (0), y.to4 (0), z.to4 (0), vec4 (0, 0, 0, 1));
             this.root.articulation_matrix = rot;//

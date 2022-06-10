@@ -4,6 +4,7 @@ import {Spiderweb} from './spiderweb.js';
 import { Balls } from './balls.js';
 import { StickyModule } from './sticky-module.js';
 import { BreakModule } from './break-module.js';
+import { SpiderModule } from './spider-module.js';
 
 const { vec3, vec4, color, Mat4, Shape, Material, Shader, Texture, Component } = tiny;
 
@@ -59,6 +60,8 @@ const Display_Scene_Base = defs.Display_Scene_Base =
         // STICKY MODULE INITIALIZATION
         this.sticky_module = new StickyModule(this.web.Simulation);
         this.break_module = new BreakModule(this.web.Simulation);
+        this.spider_module = new SpiderModule(this.web);
+  
       }
 
       render_animation( caller )
@@ -113,6 +116,7 @@ export class Display_Scene extends Display_Scene_Base
      **********************************/
 
     const blue = color( 0,0,1,1 ), yellow = color( 0.7,1,0,1 ), brown1 = color(0.5, 0.25, 0.05, 0.7), brown2 = color(0.5, 0.25, 0.05, 1);
+    
 
     const t = this.t = this.uniforms.animation_time/1000;
     const dt = this.dt = this.uniforms.animation_delta_time/1000;
@@ -185,11 +189,13 @@ export class Display_Scene extends Display_Scene_Base
       // this.balls.Simulation.update(this.balls.Simulation.timestep);
       this.sticky_module.modify_sim();
       this.break_module.modify_sim();
+      this.spider_module.Update(this.uniforms.animation_delta_time);
       t_sim += this.web.Simulation.timestep;
     }
 
     this.web.Simulation.draw(caller, this.uniforms, this.shapes, this.materials);
     this.balls.Simulation.draw(caller, this.uniforms, this.shapes, this.materials);
+    this.spider_module.Draw(caller, this.uniforms, this.shapes, this.materials);
 
     // Draw target
     let target_transform = Mat4.translation(this.target_pos[0], this.target_pos[1], this.target_pos[2]).times(Mat4.scale(0.2,0.2,0.2));
@@ -201,6 +207,8 @@ export class Display_Scene extends Display_Scene_Base
     // {
     //   console.log("Velocity: " + this.balls.Simulation.particles[0].vel);
     // }
+    
+    
   }
 
   regenerate_web()
@@ -221,6 +229,7 @@ export class Display_Scene extends Display_Scene_Base
     // STICKY MODULE INITIALIZATION
     this.sticky_module = new StickyModule(this.web.Simulation);
     this.break_module = new BreakModule(this.web.Simulation);
+    this.spider_module = new SpiderModule(this.web);
 
     // balls
     this.balls = new Balls();

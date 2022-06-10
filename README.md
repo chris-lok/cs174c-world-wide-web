@@ -14,9 +14,11 @@ Worldwide Web is a WebGL project using the tiny-graphics-js library that simulat
 ## Animation Algorithms
 - Collision Detection
 - Collision Resolution
+- Gravity
 - Mass-Spring-Damper Systems (Verlet Integration)
 - Splines 
 - Articulated Bodies
+
 
 ## Division of Work
 ### User Controls (Cole)
@@ -39,4 +41,18 @@ The web will break at locations where it stretches too far past a certain thresh
 The spider is an articulated body composed of a simple torso and set of limbs that only moves and rotates from the root node. It follows a spline that updates with the shape of the web as it deforms due to being weighed down by projectiles in some areas. The spline uses points on the web from each of its radial lines. It moves smoothly along a closed path using the techniques explored in Assignment 1.
 
 ### Environment (Kaustuv)
-![](images/above_view.png)
+![](images/above_view.PNG)
+
+The likeability of this project depended highly on the environment in which our ideas were presented. The environment consists
+of a minecraft-esque world where we chose vibrance and simplicity over complex graphics. It was important to note that it is 
+incredibly easy to create something pleasing to the eye with simple shapes and vibrant colors than it is to make it look
+complex and realistic. With these design ideas in mind, we created the environment.
+
+The environment consists of the skybox, the trees and the floor. We used the predefined "yellow" and "phong" shaders and 
+created the base for the project by scaling a cube. Turning up the ambience of the shaders made the project look less dull while under 
+the environmental lighting borrowed from previous projects. Additionally, trees were created using the traditional ball and 
+cube shapes defined in the Shapes library. These were scaled up to represent the trunks of the tree and the treetop 
+respectively. For the skybox, one fix we found was to ignore lighting using the "pure" predefined material and turning its
+ambience to 1. This gave us a material that didn't depend on shadows and acted as our desired material for the skybox. 
+Instead of the traditional six sided skybox used in game design, we opted for a simple hollow sphere within which to place
+our camera and our environment. We colored the sphere sky blue to fit our theme and made it a static object. 

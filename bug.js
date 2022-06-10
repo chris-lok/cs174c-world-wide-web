@@ -33,7 +33,28 @@ class Bug {
 
     set_pos(x, y, z)
     {
-        this.root.location_matrix = Mat4.translation(x, y, z);
+        this.root.location_matrix = Mat4.translation(x, y ,z);
+        //this.root.location_matrix = Mat4.translation(x, y, z);
+        //this.pos = vec3(x, y, z);
+
+        //const pos = vec3(this.root.location_matrix[0][3], this.root.location_matrix[1][3], this.root.location_matrix[2][3]);
+        
+    }
+
+    look_at(at)
+    {
+        const pos = vec3(this.root.location_matrix[0][3], this.root.location_matrix[1][3], this.root.location_matrix[2][3]);
+        try {
+            
+            let z = at.minus (pos).normalized (),
+              x = z.cross (vec3(0, 1, 0)).normalized (),
+              y = x.cross (z).normalized ();
+            const rot = Mat4.of (x.to4 (0), y.to4 (0), z.to4 (0), vec4 (0, 0, 0, 1));
+            this.root.articulation_matrix = rot;//
+        } catch (error) {
+            console.log(error);
+        }   
+        
     }
 
     draw(webgl_manager, uniforms, material) {
